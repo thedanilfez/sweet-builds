@@ -1,0 +1,53 @@
+name: Build images
+on:
+  push:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 5' # Build every friday at midnight
+
+jobs:
+  build-image:
+    strategy:
+      matrix:
+        version: ["default"]
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check build configuration
+        uses: actions/checkout@v4
+
+      - name: Install pmbootstrap
+        run: |
+          git clone --depth=1 https://gitlab.postmarketos.org/postmarketOS/pmbootstrap.git
+          mkdir -p ~/.local/bin
+          ln -s "$PWD/pmbootstrap/pmbootstrap.py" ~/.local/bin/pmbootstrap
+          pmbootstrap --version
+
+      - name: Set up pmaports
+        run: |
+          echo -e '\n\n' | pmbootstrap init || true
+
+      - name: Set up device config
+        run: |
+          cp xiaomi-sweet.cfg ~/.config/pmbootstrap_v3.cfg
+
+      - name: Create out directory
+        run: |
+          mkdir out
+
+      - name: Build phosh image
+        run: |
+          pmbootstrap config ui phosh
+          pmbootstrap config jobs $(nproc)
+          pmbootstrap install --password 147147
+          pmbootstrap export
+          cp /tmp/postmarketOS-export/qcom-sm7150-boot.img out/boot-xiaomi-sweet-phosh.img
+          cp /tmp/postmarketOS-export/qcom-sm7150-root.img out/root-xiaomi-sweet-phosh.img
+          echo -e "y\ny\ny" | pmbootstrap zap
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: xiaomi-sweet-phosh
+          path: out/*-xiaomi-sweet-phosh.img 
+          retention-days: 7
