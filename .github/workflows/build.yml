@@ -35,19 +35,19 @@ jobs:
         run: |
           mkdir out
 
-      - name: Build none image
+      - name: Build console image
         run: |
-          pmbootstrap config ui none
+          pmbootstrap config ui console
           pmbootstrap config jobs $(nproc)
           pmbootstrap install --password 147147
           pmbootstrap export
-          cp /tmp/postmarketOS-export/qcom-sm7150-boot.img out/boot-xiaomi-sweet-none.img
-          cp /tmp/postmarketOS-export/qcom-sm7150-root.img out/root-xiaomi-sweet-none.img
+          cp /tmp/postmarketOS-export/qcom-sm7150-boot.img out/boot-xiaomi-sweet-console.img
+          cp /tmp/postmarketOS-export/qcom-sm7150-root.img out/root-xiaomi-sweet-console.img
           echo -e "y\ny\ny" | pmbootstrap zap
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: xiaomi-sweet-none
-          path: out/*-xiaomi-sweet-none.img 
+          name: xiaomi-sweet-console
+          path: out/*-xiaomi-sweet-console.img 
           retention-days: 7
