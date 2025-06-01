@@ -41,8 +41,8 @@ jobs:
           pmbootstrap config jobs $(nproc)
           pmbootstrap install --password 147147
           pmbootstrap export
-          cp /tmp/postmarketOS-export/qcom-sm7150-boot.img out/boot-xiaomi-sweet-phosh.img
-          cp /tmp/postmarketOS-export/qcom-sm7150-root.img out/root-xiaomi-sweet-phosh.img
+          cp /tmp/postmarketOS-export/qcom-sm7150-boot.img out/boot-xiaomi-sweet-none.img
+          cp /tmp/postmarketOS-export/qcom-sm7150-root.img out/root-xiaomi-sweet-none.img
           echo -e "y\ny\ny" | pmbootstrap zap
 
       - name: Upload artifacts
