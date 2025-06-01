@@ -35,9 +35,9 @@ jobs:
         run: |
           mkdir out
 
-      - name: Build phosh image
+      - name: Build none image
         run: |
-          pmbootstrap config ui phosh
+          pmbootstrap config ui none
           pmbootstrap config jobs $(nproc)
           pmbootstrap install --password 147147
           pmbootstrap export
